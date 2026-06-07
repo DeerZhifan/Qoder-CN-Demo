@@ -1,0 +1,18 @@
+spring:
+  # ========== 数据库初始化配置 ==========
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  
+  h2:
+    console:
+      enabled: true
+  
+  mybatis-plus:
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.kb.manager: DEBUG

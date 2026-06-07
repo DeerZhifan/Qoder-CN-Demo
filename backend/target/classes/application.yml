@@ -1,0 +1,58 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: knowledge-base-manager
+  
+  # ========== H2数据库配置 ==========
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kbdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password: 
+  
+  # H2控制台（仅dev profile启用）
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+      settings:
+        web-allow-others: false
+  
+  # ========== MyBatis-Plus配置 ==========
+  mybatis-plus:
+    # Mapper XML文件位置
+    mapper-locations: classpath*:/mapper/**/*.xml
+    # 实体类包路径
+    type-aliases-package: com.kb.manager.entity
+    # 全局配置
+    global-config:
+      db-config:
+        # 主键策略：雪花算法
+        id-type: ASSIGN_ID
+        # 逻辑删除字段名
+        logic-delete-field: deleted
+        # 逻辑删除值：1表示已删除
+        logic-delete-value: 1
+        # 逻辑未删除值：0表示未删除
+        logic-not-delete-value: 0
+    # 配置项
+    configuration:
+      # 开启驼峰命名转换
+      map-underscore-to-camel-case: true
+      # 日志输出（开发环境）
+      log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  
+  # ========== Profile配置 ==========
+  profiles:
+    active: dev
+
+# ========== 日志配置 ==========
+logging:
+  level:
+    root: INFO
+    com.kb.manager: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
