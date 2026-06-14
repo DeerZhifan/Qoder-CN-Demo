@@ -1,5 +1,6 @@
 package com.kb.manager.service;
 
+import com.kb.manager.dto.CategoryDocumentCountDTO;
 import com.kb.manager.dto.CategoryTreeDTO;
 
 import java.util.List;
@@ -44,4 +45,11 @@ public interface KbCategoryService {
      * @param id 分类ID
      */
     void deleteCategory(Long id);
+    
+    /**
+     * 按分类统计文档数量
+     * 
+     * @return 分类文档数量统计列表
+     */
+    List<CategoryDocumentCountDTO> getCategoryDocumentCount();
 }

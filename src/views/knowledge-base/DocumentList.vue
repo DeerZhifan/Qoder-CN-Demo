@@ -2,6 +2,10 @@
   <div class="document-list">
     <!-- 筛选区 -->
     <el-card class="filter-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <span style="font-weight: bold;">文档筛选</span>
+        <el-button type="primary" size="small" @click="handleRefreshStats">刷新统计</el-button>
+      </div>
       <el-form :inline="true">
         <el-form-item label="分类">
           <el-select v-model="filters.categoryId" placeholder="请选择" clearable style="width: 200px">
@@ -109,6 +113,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import MarkdownIt from 'markdown-it'
 import DOMPurify from 'dompurify'
 import { pageDocuments, getCategoryTree, publishDocument, offlineDocument, deleteDocument, getDocument, getVersionList, rollbackVersion } from '@/api/document'
+import { getCategoryDocumentCount } from '@/api/category'
 
 const router = useRouter()
 const md = new MarkdownIt({
@@ -307,6 +312,25 @@ const handleRollback = async (row) => {
       console.error('回滚失败:', error)
       ElMessage.error('回滚失败')
     }
+  }
+}
+
+// 刷新统计
+const handleRefreshStats = async () => {
+  try {
+    const stats = await getCategoryDocumentCount()
+    // 构建友好的展示信息
+    const message = stats.map(item => 
+      `${item.categoryName}: ${item.documentCount} 篇`
+    ).join('\n')
+    
+    await ElMessageBox.alert(message, '分类文档数量统计', {
+      confirmButtonText: '确定',
+      dangerouslyUseHTMLString: false
+    })
+  } catch (error) {
+    console.error('获取统计数据失败:', error)
+    ElMessage.error('获取统计数据失败')
   }
 }
 

@@ -3,9 +3,19 @@ node_modules/
 
 # Build output
 dist/
+out/
+
+# Java/Maven build output
+backend/target/
+backend/*.jar
+backend/*.war
 
 # IDE
+.idea/
 .vscode/
+*.iml
+*.ipr
+*.iws
 
 # OS files
 Thumbs.db
@@ -14,8 +24,29 @@ Desktop.ini
 
 # Logs
 *.log
+logs/
 
 # Environment files
 .env
 .env.local
 .env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+
+# Database files (H2)
+backend/data/*.mv.db
+backend/data/*.trace.db
+
+# Test reports and coverage
+coverage/
+.nyc_output/
+
+# Misc
+*.class
+*.orig

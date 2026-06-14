@@ -36,3 +36,10 @@ export function updateCategory(id, data) {
 export function deleteCategory(id) {
   return request.delete(`/categories/${id}`)
 }
+
+/**
+ * 按分类统计文档数量
+ */
+export function getCategoryDocumentCount() {
+  return request.get('/categories/document-count')
+}

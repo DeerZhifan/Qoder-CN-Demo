@@ -1,6 +1,7 @@
 package com.kb.manager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kb.manager.dto.CategoryDocumentCountDTO;
 import com.kb.manager.dto.CategoryTreeDTO;
 import com.kb.manager.entity.KbCategory;
 import com.kb.manager.entity.KbDocument;
@@ -174,5 +175,41 @@ public class KbCategoryServiceImpl implements KbCategoryService {
         CategoryTreeDTO dto = new CategoryTreeDTO();
         BeanUtils.copyProperties(category, dto);
         return dto;
+    }
+    
+    @Override
+    public List<CategoryDocumentCountDTO> getCategoryDocumentCount() {
+        // 查询所有未删除的分类
+        List<KbCategory> allCategories = categoryMapper.selectList(
+            new LambdaQueryWrapper<KbCategory>()
+                .eq(KbCategory::getDeleted, 0)
+                .orderByAsc(KbCategory::getSortOrder)
+        );
+        
+        // 构建分类ID到名称的映射
+        Map<Long, String> categoryNameMap = new HashMap<>();
+        for (KbCategory category : allCategories) {
+            categoryNameMap.put(category.getId(), category.getName());
+        }
+        
+        // 按分类统计文档数量（只统计未删除且已发布的文档）
+        List<CategoryDocumentCountDTO> result = new ArrayList<>();
+        
+        for (KbCategory category : allCategories) {
+            Long count = documentMapper.selectCount(
+                new LambdaQueryWrapper<KbDocument>()
+                    .eq(KbDocument::getCategoryId, category.getId())
+                    .eq(KbDocument::getDeleted, 0)
+                    .eq(KbDocument::getStatus, "PUBLISHED")
+            );
+            
+            CategoryDocumentCountDTO dto = new CategoryDocumentCountDTO();
+            dto.setCategoryId(category.getId());
+            dto.setCategoryName(category.getName());
+            dto.setDocumentCount(count);
+            result.add(dto);
+        }
+        
+        return result;
     }
 }

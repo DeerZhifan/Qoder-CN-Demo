@@ -2,6 +2,7 @@ package com.kb.manager.controller;
 
 import com.kb.manager.common.Result;
 import com.kb.manager.dto.CategoryCreateRequest;
+import com.kb.manager.dto.CategoryDocumentCountDTO;
 import com.kb.manager.dto.CategoryTreeDTO;
 import com.kb.manager.dto.CategoryUpdateRequest;
 import com.kb.manager.service.KbCategoryService;
@@ -72,5 +73,16 @@ public class KbCategoryController {
     public Result<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return Result.success(null);
+    }
+    
+    /**
+     * 按分类统计文档数量
+     * 
+     * @return 分类文档数量统计列表
+     */
+    @GetMapping("/document-count")
+    public Result<List<CategoryDocumentCountDTO>> getCategoryDocumentCount() {
+        List<CategoryDocumentCountDTO> countList = categoryService.getCategoryDocumentCount();
+        return Result.success(countList);
     }
 }
